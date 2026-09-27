@@ -75,10 +75,22 @@ push から反映までは数分かかります。CDN のキャッシュが残�
 ## 言葉を追加する手順
 
 1. `words.json` の `words` の末尾に 1 件追加します。`no` は最後の番号 + 1 にします。
-2. JSON として正しいかと、`no` の連番・`id` の重複を確かめます。
+2. 手元で検証します。`N words OK` と出れば通過です。
 
    ```bash
-   python3 -c "import json; w=json.load(open('words.json'))['words']; assert [x['no'] for x in w]==list(range(1,len(w)+1)); assert len({x['id'] for x in w})==len(w); print(len(w), 'words OK')"
+   python3 scripts/validate_words.py
    ```
 
-3. `main` に push します。反映まで数分かかります。
+3. ブランチを切って PR を作ります。GitHub Actions の `Validate words.json` が同じ検証を走らせます。
+4. 検証が通ったら `main` にマージします。反映まで数分かかります。
+
+## 検証の内容
+
+`scripts/validate_words.py` は次を確かめます。PR と `main` への push のたびに GitHub Actions でも走ります。
+
+- JSON として読めること
+- `version` が整数で、`words` が 1 件以上あること
+- `no` が 1 からの連番であること
+- `id` が重複していないこと
+- `id` から `note` までの文字列フィールドが空でないこと
+- `category` が定義済みの値であること。新しいカテゴリを使うときは、スクリプトの `CATEGORIES` にも追加します
