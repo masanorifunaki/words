@@ -22,6 +22,8 @@ CATEGORIES = [
     "副詞",
 ]
 
+MAXIMUM_TEXT_LENGTH = 20
+
 
 def load_document(path):
     with open(path, encoding="utf-8") as file:
@@ -51,6 +53,10 @@ def validate_document(document):
             value = word.get(field)
             if not isinstance(value, str) or value.strip() == "":
                 errors.append(f"{label}: {field} は空でない文字列にしてください")
+
+        text = word.get("text")
+        if isinstance(text, str) and len(text) > MAXIMUM_TEXT_LENGTH:
+            errors.append(f"{label}: text は {MAXIMUM_TEXT_LENGTH} 文字以内にしてください（実際: {len(text)} 文字）")
 
         category = word.get("category")
         if category not in CATEGORIES:

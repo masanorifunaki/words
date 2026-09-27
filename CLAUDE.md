@@ -24,12 +24,13 @@ iOS アプリ「言葉ジグソー（仮）」の問題データを置くリポ�
 python3 scripts/validate_words.py
 ```
 
-`N words OK` 以外が出たら commit しない。スクリプトは形式（JSON・連番・id 重複・空欄・category）しか見ないため、内容は次の「内容チェック」で確かめる。
+`N words OK` 以外が出たら commit しない。スクリプトは形式（JSON・連番・id 重複・空欄・text の長さ・category）しか見ないため、内容は次の「内容チェック」で確かめる。
 
 ## データのルール
 
 - `no`: 1 からの連番。追加は末尾に足す。途中に挿入・削除して番号を振り直さない
 - `id`: `reading` をヘボン式寄りのローマ字にし、単語を `-` でつなぐ小文字。アプリが解いた言葉の記録に使うため、公開後は変えない
+- `text`: 20 文字以内。アプリは 20 文字を超える言葉を盤面に描けないため、配信されても出題しない。上限を変えるときは `scripts/validate_words.py` の `MAXIMUM_TEXT_LENGTH` と、アプリ側の `WordsRepository.maximumTextLength` をそろえる
 - `category`: `ことわざ` / `慣用句` / `四字熟語` / `故事成語` / `言葉` / `副詞` のいずれか。増やすときは `scripts/validate_words.py` の `CATEGORIES` も直す
 - `meaning` / `misunderstanding` / `note` は常体で書き、すべて「。」で終える
 - `misunderstanding` は「〜だと思われがち。」「〜と言われがち。」の形にそろえる
